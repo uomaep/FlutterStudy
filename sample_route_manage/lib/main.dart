@@ -4,6 +4,8 @@ import 'package:sample_route_manage/src/pages/normal/first.dart';
 import 'package:sample_route_manage/src/pages/normal/second.dart';
 
 import 'src/home.dart';
+import 'src/pages/next.dart';
+import 'src/pages/user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,9 +25,28 @@ class MyApp extends StatelessWidget {
       home: const Home(),
       initialRoute: "/",
       getPages: [
-        GetPage(name: "/", page: () => const Home()),
-        GetPage(name: "/first", page: () => const FirstPage()),
-        GetPage(name: "/second", page: () => const SecondPage()),
+        GetPage(
+          name: "/",
+          page: () => const Home(),
+          transition: Transition.zoom,
+        ),
+        GetPage(
+            name: "/first",
+            page: () => const FirstPage(),
+            transition: Transition.zoom),
+        GetPage(
+            name: "/second",
+            page: () => const SecondPage(),
+            transition: Transition.zoom),
+        GetPage(
+            name: "/next",
+            page: () => const NextPage(),
+            transition: Transition.zoom),
+        GetPage(
+          name: "/user/:uid",
+          page: () => const UserPage(),
+          transition: Transition.zoom,
+        ),
       ],
     );
   }
