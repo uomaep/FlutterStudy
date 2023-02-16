@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sample_route_manage/src/pages/normal/first.dart';
+import 'package:sample_route_manage/src/pages/normal/second.dart';
 
 import 'src/home.dart';
 
@@ -19,6 +21,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const Home(),
+      initialRoute: "/",
+      getPages: [
+        GetPage(name: "/", page: () => const Home()),
+        GetPage(name: "/first", page: () => const FirstPage()),
+        GetPage(name: "/second", page: () => const SecondPage()),
+      ],
     );
   }
 }
