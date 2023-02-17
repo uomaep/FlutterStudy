@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sample_route_manage/src/controller/count_controller_with_getx.dart';
+import 'package:sample_route_manage/src/pages/binding.dart';
 import 'package:sample_route_manage/src/pages/normal/first.dart';
 import 'package:sample_route_manage/src/pages/normal/second.dart';
 
@@ -46,6 +48,13 @@ class MyApp extends StatelessWidget {
           name: "/user/:uid",
           page: () => const UserPage(),
           transition: Transition.zoom,
+        ),
+        GetPage(
+          name: '/binding',
+          page: () => const BindingPage(),
+          binding: BindingsBuilder(() {
+            Get.put(CountControllerWithGetx());
+          }),
         ),
       ],
     );
