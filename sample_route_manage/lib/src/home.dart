@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:sample_route_manage/src/pages/dependencys/dependency_manage_page.dart';
 import 'package:sample_route_manage/src/pages/normal/first.dart';
+import 'package:sample_route_manage/src/pages/reactive_state_manage_page.dart';
+import 'package:sample_route_manage/src/pages/simple_state_manage_page.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -38,6 +41,24 @@ class Home extends StatelessWidget {
                 Get.toNamed("/user/28");
               },
               child: const Text("동적 url"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => const SimpleStateManagePage());
+              },
+              child: const Text("단순 상태관리"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => const ReactiveStateManagePage());
+              },
+              child: const Text("반응형 상태관리"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => const DependencyManagePage());
+              },
+              child: const Text("의존성 관리"),
             ),
           ],
         ),
