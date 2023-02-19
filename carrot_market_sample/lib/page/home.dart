@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
@@ -11,12 +11,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Map<String, String>> datas = [];
-  late int _currentPageIndex;
+  late String currentLocation;
+  final Map<String, String> locationTypeToString = {
+    "ara": "아라동",
+    "ora": "오라동",
+    "donam": "도남동",
+  };
 
   @override
   void initState() {
     super.initState();
-    _currentPageIndex = 0;
+    currentLocation = "ara";
     datas = [
       {
         "cid": "1",
@@ -111,11 +116,30 @@ class _HomeState extends State<Home> {
       elevation: 1,
       title: GestureDetector(
         onTap: () {},
-        child: Row(
-          children: const [
-            Text("아라동"),
-            Icon(Icons.arrow_drop_down),
-          ],
+        child: PopupMenuButton<String>(
+          offset: const Offset(0, 25),
+          shape: ShapeBorder.lerp(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              1),
+          onSelected: (where) {
+            setState(() {
+              currentLocation = where;
+            });
+          },
+          itemBuilder: (context) {
+            return [
+              const PopupMenuItem(value: "ara", child: Text("아라동")),
+              const PopupMenuItem(value: "ora", child: Text("오라동")),
+              const PopupMenuItem(value: "donam", child: Text("도남동")),
+            ];
+          },
+          child: Row(
+            children: [
+              Text(locationTypeToString[currentLocation] ?? ""),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
         ),
       ),
       centerTitle: false,
@@ -203,44 +227,11 @@ class _HomeState extends State<Home> {
     );
   }
 
-  BottomNavigationBarItem _bottomNavigationBarItem(
-      {required String iconName, required String label}) {
-    return BottomNavigationBarItem(
-      icon: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: SvgPicture.asset("assets/svg/${iconName}_off.svg", width: 22),
-      ),
-      label: label,
-    );
-  }
-
-  BottomNavigationBar _bottomNavigationBarWidget() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      onTap: (index) {
-        setState(() {
-          _currentPageIndex = index;
-        });
-      },
-      currentIndex: _currentPageIndex,
-      selectedItemColor: Colors.black,
-      selectedFontSize: 12,
-      items: [
-        _bottomNavigationBarItem(iconName: 'home', label: '홈'),
-        _bottomNavigationBarItem(iconName: 'notes', label: '동네생활'),
-        _bottomNavigationBarItem(iconName: 'location', label: '내 근처'),
-        _bottomNavigationBarItem(iconName: 'chat', label: '채팅'),
-        _bottomNavigationBarItem(iconName: 'user', label: '내 당근'),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbarWidget(),
       body: _bodyWidget(),
-      bottomNavigationBar: _bottomNavigationBarWidget(),
     );
   }
 }
