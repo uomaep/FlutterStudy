@@ -11,10 +11,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Map<String, String>> datas = [];
+  late int _currentPageIndex;
 
   @override
   void initState() {
     super.initState();
+    _currentPageIndex = 0;
     datas = [
       {
         "cid": "1",
@@ -201,11 +203,44 @@ class _HomeState extends State<Home> {
     );
   }
 
+  BottomNavigationBarItem _bottomNavigationBarItem(
+      {required String iconName, required String label}) {
+    return BottomNavigationBarItem(
+      icon: Padding(
+        padding: const EdgeInsets.only(bottom: 5),
+        child: SvgPicture.asset("assets/svg/${iconName}_off.svg", width: 22),
+      ),
+      label: label,
+    );
+  }
+
+  BottomNavigationBar _bottomNavigationBarWidget() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      onTap: (index) {
+        setState(() {
+          _currentPageIndex = index;
+        });
+      },
+      currentIndex: _currentPageIndex,
+      selectedItemColor: Colors.black,
+      selectedFontSize: 12,
+      items: [
+        _bottomNavigationBarItem(iconName: 'home', label: '홈'),
+        _bottomNavigationBarItem(iconName: 'notes', label: '동네생활'),
+        _bottomNavigationBarItem(iconName: 'location', label: '내 근처'),
+        _bottomNavigationBarItem(iconName: 'chat', label: '채팅'),
+        _bottomNavigationBarItem(iconName: 'user', label: '내 당근'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appbarWidget(),
       body: _bodyWidget(),
+      bottomNavigationBar: _bottomNavigationBarWidget(),
     );
   }
 }
