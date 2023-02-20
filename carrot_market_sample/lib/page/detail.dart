@@ -1,6 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carrot_market_sample/components/manor_temperature_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../utils/data_utils.dart';
 
 class DetailContentView extends StatefulWidget {
   Map<String, String> data;
@@ -10,10 +13,37 @@ class DetailContentView extends StatefulWidget {
   State<DetailContentView> createState() => _DetailContentViewState();
 }
 
-class _DetailContentViewState extends State<DetailContentView> {
+class _DetailContentViewState extends State<DetailContentView>
+    with SingleTickerProviderStateMixin {
   late Size size;
   late List<Map<String, String>> imgList;
   late int _current;
+  double locationAlpha = 0;
+  final ScrollController controller = ScrollController();
+  late AnimationController _animationController;
+  late Animation _colorTween;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this);
+    _colorTween = ColorTween(
+      begin: Colors.white,
+      end: Colors.black,
+    ).animate(_animationController);
+    controller.addListener(() {
+      setState(() {
+        if (controller.offset > 255) {
+          locationAlpha = 255;
+        } else if (controller.offset < 0) {
+          locationAlpha = 0;
+        } else {
+          locationAlpha = controller.offset;
+        }
+        _animationController.value = locationAlpha / 255;
+      });
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -29,15 +59,22 @@ class _DetailContentViewState extends State<DetailContentView> {
     ];
   }
 
+  Widget _makeIcon(IconData icon) {
+    return AnimatedBuilder(
+      animation: _colorTween,
+      builder: (context, child) => Icon(
+        icon,
+        color: _colorTween.value,
+      ),
+    );
+  }
+
   _appbarWidget() {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white.withOpacity(locationAlpha / 255),
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new,
-          color: Colors.white,
-        ),
+        icon: _makeIcon(Icons.arrow_back_ios_new),
         onPressed: () {
           Navigator.pop(context);
         },
@@ -45,17 +82,11 @@ class _DetailContentViewState extends State<DetailContentView> {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: const Icon(
-            Icons.share,
-            color: Colors.white,
-          ),
+          icon: _makeIcon(Icons.share),
         ),
         IconButton(
           onPressed: () {},
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
+          icon: _makeIcon(Icons.more_vert),
         ),
       ],
     );
@@ -230,6 +261,7 @@ class _DetailContentViewState extends State<DetailContentView> {
 
   _bodyWidget() {
     return CustomScrollView(
+      controller: controller,
       slivers: [
         SliverList(
           delegate: SliverChildListDelegate(
@@ -288,9 +320,72 @@ class _DetailContentViewState extends State<DetailContentView> {
 
   _bottomNavBarWidget() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       width: size.width,
-      height: 55,
-      color: Colors.red,
+      height: 70,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {},
+            child: SvgPicture.asset(
+              "assets/svg/heart_off.svg",
+              width: 25,
+              height: 25,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 15, right: 10),
+            width: 1,
+            height: 40,
+            color: Colors.grey.withOpacity(0.3),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                DataUtils.calcStringToWon("${widget.data['price']}"),
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                "가격제안불가",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 7,
+                    ),
+                    color: const Color(0xfff08f4f),
+                    child: const Text(
+                      "채팅으로 거래하기",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

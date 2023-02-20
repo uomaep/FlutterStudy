@@ -2,7 +2,8 @@ import 'package:carrot_market_sample/page/detail.dart';
 import 'package:carrot_market_sample/repository/contents_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
+
+import '../utils/data_utils.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -25,12 +26,6 @@ class _HomeState extends State<Home> {
     super.initState();
     currentLocation = "ara";
     contentsRepository = ContentsRepository();
-  }
-
-  final oCcy = NumberFormat("#,###", "ko_KR"); // 한국 돈단위 ,찍어주는 거 intl 라이브러리 필요
-  String calcStringToWon(String priceString) {
-    if (priceString == "무료나눔") return priceString;
-    return "${oCcy.format(int.parse(priceString))}원";
   }
 
   AppBar _appbarWidget() {
@@ -137,7 +132,7 @@ class _HomeState extends State<Home> {
                         ),
                         const SizedBox(height: 3),
                         Text(
-                          calcStringToWon("${datas[index]['price']}"),
+                          DataUtils.calcStringToWon("${datas[index]['price']}"),
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                         Expanded(
