@@ -1,4 +1,9 @@
-class ContentsRepository {
+import 'dart:convert';
+
+import 'package:carrot_market_sample/repository/local_storage_repository.dart';
+
+class ContentsRepository extends LocalStorageRepository {
+  final String MY_FAVORITE_STORE_KEY = "MY_FAVORITE_STORE_KEY";
   Map<String, dynamic> data = {
     "ara": [
       {
@@ -170,5 +175,39 @@ class ContentsRepository {
       String location) async {
     await Future.delayed(const Duration(milliseconds: 1000));
     return data[location];
+  }
+
+  Future<List> loadFavoriteContents() async {
+    String jsonString = await getStoredValue(MY_FAVORITE_STORE_KEY);
+    List<dynamic> json = jsonDecode(jsonString);
+    return json;
+  }
+
+  void updateFavoriteContent(List favoriteContentList) async {
+    await storeValue(MY_FAVORITE_STORE_KEY, jsonEncode(favoriteContentList));
+  }
+
+  addMyFavoriteContent(Map<String, String> content) async {
+    List<dynamic> favoriteContentList = await loadFavoriteContents();
+    favoriteContentList.add(content);
+    updateFavoriteContent(favoriteContentList);
+  }
+
+  deleteMyFavoriteContent(String cid) async {
+    List<dynamic> favoriteContentList = await loadFavoriteContents();
+    favoriteContentList.removeWhere((data) => data['cid'] == cid);
+    updateFavoriteContent(favoriteContentList);
+  }
+
+  isMyFavoriteContent(String cid) async {
+    bool isMyFavoriteContents = false;
+    List json = await loadFavoriteContents();
+    for (dynamic data in json) {
+      if (data['cid'] == cid) {
+        isMyFavoriteContents = true;
+        break;
+      }
+    }
+    return isMyFavoriteContents;
   }
 }

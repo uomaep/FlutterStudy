@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carrot_market_sample/components/manor_temperature_widget.dart';
+import 'package:carrot_market_sample/repository/contents_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,6 +16,7 @@ class DetailContentView extends StatefulWidget {
 
 class _DetailContentViewState extends State<DetailContentView>
     with SingleTickerProviderStateMixin {
+  late ContentsRepository contentsRepository;
   late Size size;
   late List<Map<String, String>> imgList;
   late int _current;
@@ -22,12 +24,12 @@ class _DetailContentViewState extends State<DetailContentView>
   final ScrollController controller = ScrollController();
   late AnimationController _animationController;
   late Animation _colorTween;
-  late bool isMyFavoriteContent;
+  late bool isMyFavoriteContent = false;
 
   @override
   void initState() {
     super.initState();
-    isMyFavoriteContent = false;
+    contentsRepository = ContentsRepository();
     _animationController = AnimationController(vsync: this);
     _colorTween = ColorTween(
       begin: Colors.white,
@@ -44,6 +46,15 @@ class _DetailContentViewState extends State<DetailContentView>
         }
         _animationController.value = locationAlpha / 255;
       });
+    });
+    _loadMyFavoriteContentState();
+  }
+
+  void _loadMyFavoriteContentState() async {
+    bool ck =
+        await contentsRepository.isMyFavoriteContent(widget.data['cid'] ?? "");
+    setState(() {
+      isMyFavoriteContent = ck;
     });
   }
 
@@ -328,7 +339,14 @@ class _DetailContentViewState extends State<DetailContentView>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              if (isMyFavoriteContent) {
+                //제거
+                await contentsRepository
+                    .deleteMyFavoriteContent(widget.data['cid'] ?? "");
+              } else {
+                await contentsRepository.addMyFavoriteContent(widget.data);
+              }
               setState(() {
                 isMyFavoriteContent = !isMyFavoriteContent;
               });
