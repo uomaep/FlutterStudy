@@ -1,3 +1,4 @@
+import 'package:carrot_market_sample/page/favorite.dart';
 import 'package:carrot_market_sample/page/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,6 +23,8 @@ class _AppState extends State<App> {
     switch (_currentPageIndex) {
       case 0:
         return const Home();
+      case 4:
+        return const MyFavoriteContents();
       default:
         return Container();
     }
