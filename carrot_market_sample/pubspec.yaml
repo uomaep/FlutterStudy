@@ -37,6 +37,7 @@ dependencies:
   flutter_svg: ^2.0.1 #svg 이미지 파일
   intl: ^0.18.0 #돈 콤마 찍어주는
   carousel_slider: ^4.2.1 #사진 슬라이더
+  flutter_secure_storage: ^8.0.0 #local storage 접근
 
 dev_dependencies:
   flutter_test:
