@@ -22,10 +22,12 @@ class _DetailContentViewState extends State<DetailContentView>
   final ScrollController controller = ScrollController();
   late AnimationController _animationController;
   late Animation _colorTween;
+  late bool isMyFavoriteContent;
 
   @override
   void initState() {
     super.initState();
+    isMyFavoriteContent = false;
     _animationController = AnimationController(vsync: this);
     _colorTween = ColorTween(
       begin: Colors.white,
@@ -326,11 +328,24 @@ class _DetailContentViewState extends State<DetailContentView>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              setState(() {
+                isMyFavoriteContent = !isMyFavoriteContent;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(milliseconds: 1000),
+                  content: Text(
+                    isMyFavoriteContent ? "관심목록에 추가됐습니다." : "관심목록에서 제거됐습니다.",
+                  ),
+                ),
+              );
+            },
             child: SvgPicture.asset(
-              "assets/svg/heart_off.svg",
+              "assets/svg/heart_${isMyFavoriteContent ? "on" : "off"}.svg",
               width: 25,
               height: 25,
+              color: const Color(0xfff08f4f),
             ),
           ),
           Container(
