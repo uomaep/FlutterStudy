@@ -6,3 +6,8 @@
 ![스크린샷 2023-02-23 오후 10 17 35](https://user-images.githubusercontent.com/114221785/220918764-752b359f-d63a-4bbc-bbee-d63d238d578f.png)
 ![스크린샷 2023-02-23 오후 10 17 44](https://user-images.githubusercontent.com/114221785/220918776-73e4f48b-330b-40dc-9b89-bbb91d43da63.png)
 
+## 앱코딩 현황 스크린샷
+
+### Home
+![스크린샷 2023-02-24 오전 1 00 32](https://user-images.githubusercontent.com/114221785/220962059-b25589be-9082-4f00-9035-b377ef28db7e.png)
+
